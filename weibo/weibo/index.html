@@ -1,0 +1,98 @@
+﻿<!--
+
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,initial-scale=1.0" />
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" href="master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <title>Hello Weibo</title>
+
+    <script type="text/javascript" charset="utf-8">
+
+    var deviceReady = false;
+
+    /**
+     * Function called when page has finished loading.
+     */
+    function init() {
+        document.addEventListener("deviceready", function() {
+        deviceReady = true;
+        console.log("Device="+device.platform+" "+device.version);}, false);
+        window.setTimeout(function() {
+            if (!deviceReady) {
+                alert("Error: getPicture did not initialize.  Demo will not run correctly.");
+            }
+        },1000);
+    }
+    var clientId = "3968026932";
+    var redirectorUrl = "http://www.igo.cn";
+    function WeiboLogin() {
+        navigator.weibo.login(clientId, redirectorUrl, success, fail);
+    }
+
+    //微博登陆，redirect_uri为空，登陆不成功。
+    function WeiboLoginWithRedirectorUrlNull() {
+        navigator.weibo.login(clientId, null, success, fail);
+    }
+
+    //微博登陆，redirect_uri为""，调用不成功，并给出错误信息。
+    function WeiboLoginWithRedirectorUrlEmpty() {
+        navigator.weibo.login(clientId, "", success, fail);
+    }
+
+    function success(result) {
+        var loginResult = "";
+        loginResult = loginResult + "redirector_url:" + result.redirector_url + "\n";
+        loginResult = loginResult + "access_token:" + result.access_token + "\n";
+        loginResult = loginResult + "remind_in:" + result.remind_in + "\n";
+        loginResult = loginResult + "expires_in:" + result.expires_in + "\n";
+        loginResult = loginResult + "uid:" + result.uid;
+        document.getElementById('status').innerText = "success";
+        document.getElementById('result').innerText = loginResult;
+    }
+
+    function fail(result) {
+        document.getElementById('status').innerText = "fail";
+        document.getElementById('result').innerText = "fail:" + result;
+    }
+
+</script>
+    </head>
+    <body id="stage" class="theme">
+    <h1>Weibo</h1>
+    <div id="info">
+            status: <span id="status"></span><br/>
+            result: <span id="result"></span><br/>
+        </div>
+        <div class="btn large" onclick="WeiboLogin();">WeiboLogin</div>
+        <div class="btn large" onclick="WeiboLoginWithRedirectorUrlNull();">RedirectorUrlNull</div>
+        <div class="btn large" onclick="WeiboLoginWithRedirectorUrlEmpty();">RedirectorUrlEmpty</div>
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            init();
+        </script>
+    </body>
+</html>
